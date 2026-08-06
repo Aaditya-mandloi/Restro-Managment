@@ -1,0 +1,162 @@
+[
+  {
+    "model": "home.menucategory",
+    "pk": 1,
+    "fields": {
+      "name": "Thali"
+    }
+  },
+  {
+    "model": "home.menucategory",
+    "pk": 2,
+    "fields": {
+      "name": "Starters & Daal"
+    }
+  },
+  {
+    "model": "home.menucategory",
+    "pk": 3,
+    "fields": {
+      "name": "Sabji"
+    }
+  },
+  {
+    "model": "home.menucategory",
+    "pk": 4,
+    "fields": {
+      "name": "Paneer"
+    }
+  },
+  {
+    "model": "home.menucategory",
+    "pk": 5,
+    "fields": {
+      "name": "Italian"
+    }
+  },
+  {
+    "model": "home.menucategory",
+    "pk": 6,
+    "fields": {
+      "name": "Chinese & Snacks"
+    }
+  },
+  {
+    "model": "home.menucategory",
+    "pk": 7,
+    "fields": {
+      "name": "Beverages"
+    }
+  },
+
+  {
+    "model": "home.menuitem",
+    "pk": 1,
+    "fields": {
+      "category": 1,
+      "name": "Regular Thali",
+      "description": "Dal, Bati, Salad, Chutney, Achar",
+      "price": "120",
+      "image_url": ""
+    }
+  },
+  {
+    "model": "home.menuitem",
+    "pk": 2,
+    "fields": {
+      "category": 1,
+      "name": "Special Thali",
+      "description": "Dal, Bati, Salad, Chutney, Achar, Aloo Gujarati, Rice, Churma, Masala Chhach/Kadhi",
+      "price": "160",
+      "image_url": ""
+    }
+  },
+  {
+    "model": "home.menuitem",
+    "pk": 3,
+    "fields": {
+      "category": 2,
+      "name": "Dal Fry",
+      "description": "",
+      "price": "100",
+      "image_url": ""
+    }
+  },
+  {
+    "model": "home.menuitem",
+    "pk": 4,
+    "fields": {
+      "category": 2,
+      "name": "Dal Tadka",
+      "description": "",
+      "price": "110",
+      "image_url": ""
+    }
+  },
+  {
+    "model": "home.menuitem",
+    "pk": 5,
+    "fields": {
+      "category": 3,
+      "name": "Sev Tamatar",
+      "description": "",
+      "price": "130",
+      "image_url": ""
+    }
+  },
+  {
+    "model": "home.menuitem",
+    "pk": 6,
+    "fields": {
+      "category": 4,
+      "name": "Kadhai Paneer",
+      "description": "",
+      "price": "250",
+      "image_url": ""
+    }
+  },
+  {
+    "model": "home.menuitem",
+    "pk": 7,
+    "fields": {
+      "category": 5,
+      "name": "White Sauce Pasta",
+      "description": "",
+      "price": "150",
+      "image_url": ""
+    }
+  },
+  {
+    "model": "home.menuitem",
+    "pk": 8,
+    "fields": {
+      "category": 5,
+      "name": "Veg Cheese Pizza",
+      "description": "",
+      "price": "140",
+      "image_url": ""
+    }
+  },
+  {
+    "model": "home.menuitem",
+    "pk": 9,
+    "fields": {
+      "category": 6,
+      "name": "Manchurian Dry/Gravy",
+      "description": "",
+      "price": "100",
+      "image_url": ""
+    }
+  },
+  {
+    "model": "home.menuitem",
+    "pk": 10,
+    "fields": {
+      "category": 7,
+      "name": "Masala Tea",
+      "description": "",
+      "price": "30",
+      "image_url": ".static/images/masala tea.jpg"
+    }
+  }
+]

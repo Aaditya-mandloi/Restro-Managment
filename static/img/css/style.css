@@ -1,0 +1,60 @@
+/* Menu Section */
+#menu h2 {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #333;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 0.5rem;
+}
+
+/* Food Cards */
+.food-card {
+  border: none;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.food-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+/* Food Images */
+.food-card img {
+  height: 220px;
+  object-fit: cover;
+  border-bottom: 1px solid #eee;
+}
+
+/* Card Body */
+.food-card .card-body {
+  padding: 1rem;
+}
+
+.food-card h4 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.food-card p {
+  font-size: 0.95rem;
+  color: #666;
+  margin-bottom: 0.75rem;
+}
+
+.food-card .price {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #e63946;
+  margin-bottom: 0.75rem;
+}
+
+/* Add to Cart Button */
+.food-card .btn {
+  border-radius: 8px;
+  font-weight: 500;
+}
