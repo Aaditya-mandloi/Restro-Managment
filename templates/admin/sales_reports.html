@@ -1,0 +1,325 @@
+
+{% extends "admin/admin_base.html" %}
+
+{% block title %}Sales Reports | Unity Restaurant{% endblock %}
+
+{% block page_heading %}Sales Reports{% endblock %}
+{% block page_description %}Monitor restaurant revenue, orders and daily sales performance.{% endblock %}
+
+{% block extra_css %}
+<style>
+    .report-container {
+        width: 100%;
+    }
+
+    .report-filter,
+    .report-card,
+    .report-table-panel {
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+
+    .report-filter label {
+        display: block;
+        color: var(--text-muted);
+        font-size: 12px;
+        font-weight: 600;
+        margin-bottom: 7px;
+    }
+
+    .report-filter .form-control {
+        background: var(--input-bg);
+        color: var(--text-main);
+        border: 1px solid var(--border-color);
+        min-height: 42px;
+    }
+
+    .report-filter .form-control:focus {
+        background: var(--input-bg);
+        color: var(--text-main);
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px rgba(229,166,66,.12);
+    }
+
+    .btn-filter {
+        background: var(--accent);
+        color: #17120a;
+        border: 1px solid var(--accent);
+        border-radius: 7px;
+        padding: 10px 18px;
+        font-weight: 700;
+        min-height: 42px;
+        width: 100%;
+    }
+
+    .btn-filter:hover {
+        background: var(--accent-hover);
+        border-color: var(--accent-hover);
+    }
+
+    .report-summary {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+
+    .report-card {
+        margin-bottom: 0;
+        min-width: 0;
+    }
+
+    .report-icon {
+        font-size: 23px;
+        margin-bottom: 13px;
+    }
+
+    .report-label {
+        color: var(--text-muted);
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: .7px;
+        margin-bottom: 8px;
+    }
+
+    .report-value {
+        color: var(--text-main);
+        font-size: 25px;
+        font-weight: 800;
+        overflow-wrap: anywhere;
+    }
+
+    .report-subtitle {
+        color: var(--text-muted);
+        font-size: 11px;
+        margin-top: 7px;
+    }
+
+    .report-heading {
+        color: var(--text-main);
+        font-size: 17px;
+        font-weight: 700;
+        margin: 0;
+    }
+
+    .report-period {
+        color: var(--text-muted);
+        font-size: 12px;
+        margin-top: 7px;
+    }
+
+    .report-table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 450px;
+        margin-top: 15px;
+    }
+
+    .report-table th {
+        background: var(--input-bg);
+        color: var(--text-muted);
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: .6px;
+        padding: 13px;
+        text-align: left;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .report-table td {
+        color: var(--text-main);
+        font-size: 13px;
+        padding: 14px 13px;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .report-table tr:last-child td {
+        border-bottom: none;
+    }
+
+    .sales-amount {
+        color: #55d6a7 !important;
+        font-weight: 700;
+    }
+
+    .report-empty {
+        color: var(--text-muted) !important;
+        text-align: center;
+        padding: 30px !important;
+    }
+
+    .report-note {
+        color: var(--text-muted);
+        font-size: 12px;
+        margin-top: 15px;
+    }
+
+    @media (max-width: 768px) {
+        .report-summary {
+            grid-template-columns: 1fr;
+        }
+
+        .report-filter,
+        .report-card,
+        .report-table-panel {
+            padding: 15px;
+        }
+
+        .report-value {
+            font-size: 22px;
+        }
+    }
+</style>
+{% endblock %}
+
+
+{% block admin_content %}
+
+<div class="report-container">
+
+    <!-- Date Filter -->
+    <div class="report-filter">
+        <form method="GET" action="{% url 'admin_sales_reports' %}">
+
+            <div class="row g-3 align-items-end">
+
+                <div class="col-md-4">
+                    <label for="startDate">Start Date</label>
+                    <input
+                        type="date"
+                        id="startDate"
+                        name="start_date"
+                        class="form-control"
+                        value="{{ start_date|date:'Y-m-d' }}"
+                        required
+                    >
+                </div>
+
+                <div class="col-md-4">
+                    <label for="endDate">End Date</label>
+                    <input
+                        type="date"
+                        id="endDate"
+                        name="end_date"
+                        class="form-control"
+                        value="{{ end_date|date:'Y-m-d' }}"
+                        required
+                    >
+                </div>
+
+                <div class="col-md-4">
+                    <button type="submit" class="btn-filter">
+                        Generate Report
+                    </button>
+                </div>
+
+            </div>
+        </form>
+    </div>
+
+
+    <!-- Report Summary -->
+    <div class="report-summary">
+
+        <div class="report-card">
+            <div class="report-icon">💰</div>
+            <div class="report-label">TOTAL REVENUE</div>
+            <div class="report-value">
+                ₹{{ total_sales|floatformat:2 }}
+            </div>
+            <div class="report-subtitle">
+                Revenue excluding cancelled orders
+            </div>
+        </div>
+
+        <div class="report-card">
+            <div class="report-icon">🧾</div>
+            <div class="report-label">TOTAL ORDERS</div>
+            <div class="report-value">
+                {{ total_orders }}
+            </div>
+            <div class="report-subtitle">
+                Successfully recorded non-cancelled orders
+            </div>
+        </div>
+
+        <div class="report-card">
+            <div class="report-icon">📊</div>
+            <div class="report-label">AVERAGE ORDER VALUE</div>
+            <div class="report-value">
+                ₹{{ average_order_value|floatformat:2 }}
+            </div>
+            <div class="report-subtitle">
+                Average revenue per order
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- Daily Sales Table -->
+    <div class="report-table-panel">
+
+        <h5 class="report-heading">Daily Sales Breakdown</h5>
+
+        <p class="report-period">
+            Report period:
+            {{ start_date|date:"d M Y" }}
+            to
+            {{ end_date|date:"d M Y" }}
+        </p>
+
+        <div class="table-responsive">
+            <table class="report-table">
+
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Orders</th>
+                        <th>Total Sales</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for day in daily_sales %}
+                        <tr>
+                            <td>
+                                {{ day.created_at__date|date:"d M Y" }}
+                            </td>
+
+                            <td>
+                                {{ day.order_count }}
+                            </td>
+
+                            <td class="sales-amount">
+                                ₹{{ day.total_sales|floatformat:2 }}
+                            </td>
+                        </tr>
+
+                    {% empty %}
+                        <tr>
+                            <td colspan="3" class="report-empty">
+                                No sales records found for this date range.
+                            </td>
+                        </tr>
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+        </div>
+
+        <p class="report-note">
+            Note: Cancelled orders are excluded from revenue, order count
+            and average order value.
+        </p>
+
+    </div>
+
+</div>
+
+{% endblock %}

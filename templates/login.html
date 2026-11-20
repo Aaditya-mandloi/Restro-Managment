@@ -1,0 +1,219 @@
+
+{% extends "base.html" %}
+{% block title %}Login | Unity Restaurant{% endblock %}
+
+{% block body %}
+
+<style>
+    .login-section {
+        min-height: 85vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 50px 15px;
+        background: linear-gradient(135deg, #fff8f0, #fcebdc);
+    }
+
+    .login-card {
+        width: 100%;
+        max-width: 950px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        background: #fff;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 15px 45px rgba(0,0,0,0.12);
+    }
+
+    .login-image {
+        background:
+            linear-gradient(rgba(0,0,0,0.35), rgba(0,0,0,0.55)),
+            url("https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1000")
+            center/cover no-repeat;
+        color: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 45px;
+    }
+
+    .login-image h1 {
+        font-size: 38px;
+        font-weight: 700;
+    }
+
+    .login-image p {
+        font-size: 16px;
+        line-height: 1.7;
+    }
+
+    .login-form {
+        padding: 50px 40px;
+    }
+
+    .login-form h2 {
+        font-weight: 700;
+        color: #292929;
+    }
+
+    .login-subtitle {
+        color: #777;
+        margin-bottom: 30px;
+    }
+
+    .login-form .form-control {
+        height: 48px;
+        border-radius: 9px;
+        border: 1px solid #ddd;
+        padding: 12px;
+    }
+
+    .login-form .form-control:focus {
+        border-color: #c76b32;
+        box-shadow: 0 0 0 0.2rem rgba(199,107,50,0.15);
+    }
+
+    .login-btn {
+        height: 48px;
+        border: none;
+        border-radius: 9px;
+        background: #c76b32;
+        color: white;
+        font-weight: 600;
+        transition: 0.3s;
+    }
+
+    .login-btn:hover {
+        background: #a94e20;
+        color: white;
+        transform: translateY(-2px);
+    }
+
+    .signup-link {
+        color: #c76b32;
+        font-weight: 600;
+        text-decoration: none;
+    }
+
+    .signup-link:hover {
+        text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+        .login-card {
+            grid-template-columns: 1fr;
+            max-width: 450px;
+        }
+
+        .login-image {
+            min-height: 200px;
+            padding: 30px;
+        }
+
+        .login-image h1 {
+            font-size: 28px;
+        }
+
+        .login-form {
+            padding: 35px 25px;
+        }
+    }
+</style>
+
+<section class="login-section">
+
+    <div class="login-card">
+
+        <!-- Left Side: Restaurant Image -->
+        <div class="login-image">
+            <h1>Welcome to Unity Restaurant</h1>
+
+            <p>
+                Delicious food, unforgettable moments.
+                Sign in to explore our menu, order your
+                favourite dishes and track your orders.
+            </p>
+        </div>
+
+        <!-- Right Side: Login Form -->
+        <div class="login-form">
+
+            <div class="text-center mb-4">
+                <h2>Welcome Back!</h2>
+                <p class="login-subtitle">
+                    Login to continue your food journey.
+                </p>
+            </div>
+
+            {% if form.errors %}
+                <div class="alert alert-danger">
+                    Invalid email/username or password.
+                    Please try again.
+                </div>
+            {% endif %}
+
+            {% if next %}
+                <div class="alert alert-info">
+                    Please log in to access this page.
+                </div>
+            {% endif %}
+
+            <form method="post">
+                {% csrf_token %}
+
+                <div class="mb-3">
+                    <label for="id_username" class="form-label">
+                        Email or Username
+                    </label>
+
+                    <input
+                        type="text"
+                        name="username"
+                        id="id_username"
+                        class="form-control"
+                        placeholder="Enter your email or username"
+                        value="{{ form.username.value|default:'' }}"
+                        autocomplete="username"
+                        required
+                    >
+                </div>
+
+                <div class="mb-4">
+                    <label for="id_password" class="form-label">
+                        Password
+                    </label>
+
+                    <input
+                        type="password"
+                        name="password"
+                        id="id_password"
+                        class="form-control"
+                        placeholder="Enter your password"
+                        autocomplete="current-password"
+                        required
+                    >
+                </div>
+
+                <button type="submit" class="btn login-btn w-100">
+                    Login
+                </button>
+
+                <input type="hidden" name="next" value="{{ next }}">
+            </form>
+
+            <div class="text-center mt-4">
+                <p class="mb-0">
+                    Don't have an account?
+                    <a href="{% url 'signup' %}" class="signup-link">
+                        Create Account
+                    </a>
+                </p>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

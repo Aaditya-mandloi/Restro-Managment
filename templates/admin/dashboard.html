@@ -1,0 +1,379 @@
+```django
+{% extends "admin/admin_base.html" %}
+
+{% block title %}Dashboard | Unity Restaurant{% endblock %}
+{% block page_heading %}Dashboard{% endblock %}
+
+{% block page_description %}
+Welcome back! Here's your restaurant overview.
+{% endblock %}
+
+{% block extra_css %}
+
+/* DASHBOARD STATISTICS */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 16px;
+    margin-bottom: 25px;
+}
+
+.stat-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 13px;
+    padding: 20px;
+    transition: 0.2s;
+    min-width: 0;
+}
+
+.stat-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--accent);
+}
+
+.stat-icon {
+    width: 43px;
+    height: 43px;
+    border-radius: 10px;
+    background: #30283a;
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 21px;
+    margin-bottom: 15px;
+}
+
+.stat-label {
+    color: var(--text-muted);
+    font-size: 12px;
+}
+
+.stat-value {
+    font-size: 24px;
+    font-weight: 750;
+    margin-top: 8px;
+    overflow-wrap: anywhere;
+}
+
+/* PANELS */
+.dashboard-panel {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 13px;
+    padding: 23px;
+    margin-bottom: 23px;
+}
+
+.panel-title {
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.panel-subtitle {
+    color: var(--text-muted);
+    font-size: 12px;
+}
+
+.view-all {
+    color: var(--accent);
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.view-all:hover {
+    color: var(--accent-hover);
+}
+
+/* TABLE */
+.dashboard-table {
+    width: 100%;
+    margin-top: 18px;
+    border-collapse: collapse;
+    vertical-align: middle;
+}
+
+.dashboard-table th {
+    color: var(--text-muted);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+    font-weight: 600;
+    padding: 14px 10px;
+    border-bottom: 1px solid var(--border-color);
+    white-space: nowrap;
+}
+
+.dashboard-table td {
+    color: var(--text-main);
+    font-size: 13px;
+    padding: 16px 10px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.dashboard-table tbody tr:hover {
+    background: #202633;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    background: #30283a;
+    color: var(--accent);
+    white-space: nowrap;
+}
+
+.status-delivered {
+    background: #123523;
+    color: #4ade80;
+}
+
+.status-cancelled {
+    background: #3b2024;
+    color: #f87171;
+}
+
+.status-out {
+    background: #18324a;
+    color: #60a5fa;
+}
+
+.empty-state {
+    text-align: center;
+    color: var(--text-muted);
+    padding: 35px 10px !important;
+}
+
+/* QUICK ACTIONS */
+.quick-actions {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.quick-action {
+    display: block;
+    border: 1px solid var(--border-color);
+    background: #1c2230;
+    border-radius: 10px;
+    padding: 20px 15px;
+    text-align: center;
+    color: var(--text-main);
+    text-decoration: none;
+    transition: 0.2s;
+}
+
+.quick-action:hover {
+    border-color: var(--accent);
+    transform: translateY(-3px);
+    color: var(--accent);
+}
+
+.quick-action-icon {
+    font-size: 25px;
+    margin-bottom: 10px;
+}
+
+.quick-action-title {
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.quick-action-description {
+    font-size: 10px;
+    color: var(--text-muted);
+    margin-top: 6px;
+}
+
+@media (max-width: 1300px) {
+    .stats-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    .stats-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+    }
+
+    .stat-card {
+        padding: 15px;
+    }
+
+    .stat-value {
+        font-size: 20px;
+    }
+
+    .quick-actions {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .dashboard-panel {
+        padding: 16px;
+    }
+}
+
+@media (max-width: 420px) {
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+{% endblock %}
+
+
+{% block admin_content %}
+
+<!-- STATISTICS -->
+<section class="stats-grid">
+
+    <div class="stat-card">
+        <div class="stat-icon">🛍</div>
+        <div class="stat-label">Total Orders</div>
+        <div class="stat-value">{{ total_orders|default:0 }}</div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon">₹</div>
+        <div class="stat-label">Total Revenue</div>
+        <div class="stat-value">₹{{ total_revenue|default:0|floatformat:2 }}</div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon">👥</div>
+        <div class="stat-label">Total Customers</div>
+        <div class="stat-value">{{ total_customers|default:0 }}</div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon">🍽</div>
+        <div class="stat-label">Total Menu Items</div>
+        <div class="stat-value">{{ total_menu_items|default:0 }}</div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon">⏳</div>
+        <div class="stat-label">Active Orders</div>
+        <div class="stat-value">{{ pending_orders|default:0 }}</div>
+    </div>
+
+</section>
+
+<!-- RECENT ORDERS -->
+<section class="dashboard-panel" id="orders-section">
+
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <div>
+            <h2 class="panel-title">Recent Orders</h2>
+            <p class="panel-subtitle">Latest five restaurant orders</p>
+        </div>
+
+        <a href="{% url 'admin_orders' %}" class="view-all">
+            View All Orders →
+        </a>
+    </div>
+
+    <div class="table-responsive">
+        <table class="dashboard-table">
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Customer</th>
+                    <th>Date</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for order in recent_orders %}
+                <tr>
+                    <td>#{{ order.order_id }}</td>
+                    <td>{{ order.customer_name }}</td>
+                    <td>{{ order.created_at|date:"d M Y, h:i A" }}</td>
+                    <td>₹{{ order.total_amount|floatformat:2 }}</td>
+                    <td>
+                        {% if order.status == "Delivered" %}
+                            <span class="status-badge status-delivered">Delivered</span>
+                        {% elif order.status == "Cancelled" %}
+                            <span class="status-badge status-cancelled">Cancelled</span>
+                        {% elif order.status == "Out for Delivery" %}
+                            <span class="status-badge status-out">Out for Delivery</span>
+                        {% else %}
+                            <span class="status-badge">{{ order.status }}</span>
+                        {% endif %}
+                    </td>
+                </tr>
+
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="empty-state">
+                        <div style="font-size:32px;">🛍</div>
+                        <p class="mt-2 mb-0">No orders available yet.</p>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<!-- MANAGEMENT MODULES -->
+<section class="dashboard-panel" id="modules-section">
+
+    <h2 class="panel-title">Restaurant Management</h2>
+    <p class="panel-subtitle">
+        Manage your restaurant operations from one place.
+    </p>
+
+    <div class="quick-actions">
+
+        <a href="{% url 'admin_orders' %}" class="quick-action">
+            <div class="quick-action-icon">🛍</div>
+            <div class="quick-action-title">Manage Orders</div>
+            <div class="quick-action-description">View and update customer orders →</div>
+        </a>
+
+        <a href="{% url 'admin_menu' %}" class="quick-action">
+            <div class="quick-action-icon">🍽</div>
+            <div class="quick-action-title">Menu Management</div>
+            <div class="quick-action-description">Add, edit and delete menu items →</div>
+        </a>
+
+        <a href="{% url 'admin_customers' %}" class="quick-action">
+            <div class="quick-action-icon">👥</div>
+            <div class="quick-action-title">Customers</div>
+            <div class="quick-action-description">View and manage customers →</div>
+        </a>
+
+        <div class="quick-action">
+            <div class="quick-action-icon">👨‍🍳</div>
+            <div class="quick-action-title">Staff Management</div>
+            <div class="quick-action-description">Coming soon</div>
+        </div>
+
+        <a href="{% url 'admin_sales_reports' %}" class="quick-action">
+            <div class="quick-action-icon">📊</div>
+            <div class="quick-action-title">Sales Reports</div>
+            <div class="quick-action-description">View restaurant sales and reports →</div>
+        </a>
+
+        <a href="{% url 'admin_customer_messages' %}" class="quick-action">
+            <div class="quick-action-icon">✉</div>
+            <div class="quick-action-title">Customer Messages</div>
+            <div class="quick-action-description">View customer enquiries →</div>
+        </a>
+
+    </div>
+</section>
+
+{% endblock %}
+```

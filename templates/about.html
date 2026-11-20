@@ -1,7 +1,118 @@
-{%extends "base.html"%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>About Us - Unity Restaurant & Café</title>
+   <link rel="stylesheet" href="css/style.css">
+   <style>
+      body {
+         font-family: 'Segoe UI', sans-serif;
+         background: #fdfdfd;
+         margin: 0;
+         padding: 0;
+         color: #333;
+         line-height: 1.7;
+      }
+      .about {
+         padding: 50px 20px;
+      }
+      .about-container {
+         max-width: 900px;
+         margin: auto;
+         background: #fff;
+         padding: 40px;
+         border-radius: 12px;
+         box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      }
+      .about h1 {
+         font-size: 2.5rem;
+         color: #2c3e50;
+         margin-bottom: 20px;
+         text-align: center;
+      }
+      .about h2 {
+         font-size: 1.8rem;
+         color: #e67e22;
+         margin-top: 30px;
+         margin-bottom: 15px;
+         border-left: 5px solid #e67e22;
+         padding-left: 10px;
+      }
+      .about p {
+         margin-bottom: 15px;
+      }
+      .menu-list {
+         list-style: none;
+         padding: 0;
+         margin: 20px 0;
+      }
+      .menu-list li {
+         background: #f9f9f9;
+         margin: 8px 0;
+         padding: 10px 15px;
+         border-radius: 8px;
+         font-size: 1.1rem;
+         transition: background 0.3s ease;
+      }
+      .menu-list li:hover {
+         background: #ffe6cc;
+      }
+      .philosophy {
+         background: #fafafa;
+         padding: 15px;
+         border-left: 4px solid #2c3e50;
+         border-radius: 8px;
+      }
+      .visit-btn {
+         display: inline-block;
+         margin-top: 20px;
+         padding: 12px 25px;
+         background: #e67e22;
+         color: #fff;
+         font-size: 1.1rem;
+         font-weight: bold;
+         text-decoration: none;
+         border-radius: 8px;
+         transition: background 0.3s ease;
+      }
+      .visit-btn:hover {
+         background: #d35400;
+      }
+   </style>
+</head>
+<body>
+   <section class="about">
+      <div class="about-container">
+         <h1>Welcome to Unity Restaurant & Café</h1>
+         <p>At <strong>Unity</strong>, we believe food is more than just a meal—it’s an experience that brings people together. 
+         Located in the heart of <strong>Shajapur</strong>, our restaurant and café is a warm, inviting space where tradition meets modern flavors.</p>
 
-{% block title %}about{% endblock %}
+         <h2>Our Specialty – Daal Bati</h2>
+         <p>We take pride in serving the authentic taste of <em>Rajasthani Daal Bati</em>, prepared with love and traditional recipes passed down through generations. 
+         It’s our signature dish, and we make sure every bite reflects the richness of Indian culture.</p>
 
-{% block body %}
-   this is about page
-{% endblock %}
+         <h2>A Complete Dining Experience</h2>
+         <ul class="menu-list">
+            <li>🍲 Traditional Indian meals</li>
+            <li>☕ Café-style snacks and beverages</li>
+            <li>🥗 Fresh salads and light bites</li>
+            <li>🍝 Continental and fusion options</li>
+         </ul>
+         <p>Whether you’re here for a hearty family dinner, a casual coffee with friends, or a quick snack, we’ve got something for everyone.</p>
+
+         <h2>Our Philosophy</h2>
+         <div class="philosophy">
+            <p><strong>Unity in flavors</strong> – blending tradition with innovation</p>
+            <p><strong>Unity in people</strong> – creating a space where everyone feels at home</p>
+            <p><strong>Unity in service</strong> – offering hospitality that makes you want to return</p>
+         </div>
+
+         <h2>Visit Us</h2>
+         <p>📍 Situated in <strong>Shajapur</strong>, Unity is more than just a restaurant—it’s a place where food, culture, and community come together.</p>
+         <!-- Visit Us Button -->
+         <a href="https://maps.app.goo.gl/4fD2xBVyx2Fs1Nax8" class="visit-btn">Visit Us</a>
+      </div>
+   </section>
+</body>
+</html>

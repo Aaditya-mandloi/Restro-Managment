@@ -1,76 +1,266 @@
+
 {% extends "base.html" %}
 
-{% block title %}Contact{% endblock %}
+{% block title %}Contact Us | Unity Restaurant{% endblock %}
+
+{% block extra_css %}
+<style>
+    .contact-page {
+        max-width: 1100px;
+        margin: 45px auto;
+        padding: 20px;
+    }
+
+    .contact-heading {
+        text-align: center;
+        margin-bottom: 35px;
+    }
+
+    .contact-heading h2 {
+        font-size: 34px;
+        font-weight: 700;
+        color: #d4af37;
+    }
+
+    .contact-heading p {
+        color: #999;
+    }
+
+    .contact-panel {
+        background: #1e293b;
+        border: 1px solid #334155;
+        border-radius: 16px;
+        padding: 30px;
+        height: 100%;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+
+    .contact-panel h3 {
+        color: #d4af37;
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+
+    .contact-panel .subtitle {
+        color: #94a3b8;
+        margin-bottom: 25px;
+    }
+
+    .contact-panel label {
+        color: #e2e8f0;
+        font-weight: 500;
+        margin-bottom: 8px;
+    }
+
+    .contact-panel .form-control,
+    .contact-panel .form-select {
+        background: #0f172a;
+        border: 1px solid #475569;
+        color: white;
+        padding: 12px;
+        border-radius: 8px;
+    }
+
+    .contact-panel .form-control:focus,
+    .contact-panel .form-select:focus {
+        border-color: #d4af37;
+        box-shadow: 0 0 0 0.2rem rgba(212,175,55,0.15);
+    }
+
+    .contact-panel .form-control::placeholder {
+        color: #64748b;
+    }
+
+    .gold-btn {
+        background: #d4af37;
+        color: #111827;
+        border: none;
+        padding: 12px 25px;
+        border-radius: 8px;
+        font-weight: 700;
+        width: 100%;
+        transition: 0.3s;
+    }
+
+    .gold-btn:hover {
+        background: #f0ca52;
+        transform: translateY(-2px);
+    }
+
+    .rating-options {
+        display: flex;
+        flex-direction: row-reverse;
+        justify-content: flex-end;
+        gap: 8px;
+        margin: 10px 0 20px;
+    }
+
+    .rating-options input {
+        display: none;
+    }
+
+    .rating-options label {
+        font-size: 35px;
+        color: #64748b;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    .rating-options label:hover,
+    .rating-options label:hover ~ label,
+    .rating-options input:checked ~ label {
+        color: #f5c542;
+    }
+
+    @media (max-width: 768px) {
+        .contact-panel {
+            padding: 22px;
+        }
+
+        .contact-heading h2 {
+            font-size: 28px;
+        }
+    }
+</style>
+{% endblock %}
 
 {% block body %}
 
-<div class="container my-5">
+<div class="contact-page">
 
-    <h2 class="text-center mb-4">Contact Us</h2>
+    <div class="contact-heading">
+        <h2>Get in Touch</h2>
+        <p>We would love to hear from you. Contact us or share your dining experience!</p>
+    </div>
 
     {% if success %}
-    <div class="alert alert-success" role="alert">
+    <div class="alert alert-success">
         {{ success }}
     </div>
     {% endif %}
 
-    <form method="POST" action="/contact/">
-        {% csrf_token %}
+    <div class="row g-4">
 
-        <!-- Name -->
-        <div class="mb-3">
-            <label for="name" class="form-label">Full Name</label>
-            <input
-                type="text"
-                class="form-control"
-                id="name"
-                name="name"
-                placeholder="Enter your full name"
-                required>
+        <!-- CONTACT FORM -->
+        <div class="col-lg-6">
+            <div class="contact-panel">
+
+                <h3>Contact Us</h3>
+                <p class="subtitle">Have a question or need assistance? Send us a message.</p>
+
+                <form method="POST" action="/contact/">
+                    {% csrf_token %}
+                    <input type="hidden" name="form_type" value="contact">
+
+                    <div class="mb-3">
+                        <label for="contact_name">Full Name</label>
+                        <input type="text"
+                               class="form-control"
+                               id="contact_name"
+                               name="name"
+                               placeholder="Enter your full name"
+                               required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="contact_email">Email Address</label>
+                        <input type="email"
+                               class="form-control"
+                               id="contact_email"
+                               name="email"
+                               placeholder="Enter your email"
+                               required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="contact_phone">Contact Number</label>
+                        <input type="tel"
+                               class="form-control"
+                               id="contact_phone"
+                               name="phone"
+                               placeholder="Enter your mobile number"
+                               required>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="contact_message">Your Message</label>
+                        <textarea class="form-control"
+                                  id="contact_message"
+                                  name="message"
+                                  rows="5"
+                                  placeholder="Write your message here..."
+                                  required></textarea>
+                    </div>
+
+                    <button type="submit" class="gold-btn">
+                        Send Message
+                    </button>
+                </form>
+
+            </div>
         </div>
 
-        <!-- Email -->
-        <div class="mb-3">
-            <label for="email" class="form-label">Email Address</label>
-            <input
-                type="email"
-                class="form-control"
-                id="email"
-                name="email"
-                placeholder="Enter your email"
-                required>
+        <!-- REVIEW FORM -->
+        <div class="col-lg-6">
+            <div class="contact-panel">
+
+                <h3>Share Your Experience</h3>
+                <p class="subtitle">Enjoyed your visit? Let us know how we did!</p>
+
+                <form method="POST" action="/contact/">
+                    {% csrf_token %}
+                    <input type="hidden" name="form_type" value="review">
+
+                    <div class="mb-3">
+                        <label for="review_name">Your Name</label>
+                        <input type="text"
+                               class="form-control"
+                               id="review_name"
+                               name="review_name"
+                               placeholder="Enter your name"
+                               required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label>Your Rating</label>
+
+                        <div class="rating-options">
+                            <input type="radio" id="star5" name="rating" value="5" required>
+                            <label for="star5" title="Excellent">★</label>
+
+                            <input type="radio" id="star4" name="rating" value="4">
+                            <label for="star4" title="Very Good">★</label>
+
+                            <input type="radio" id="star3" name="rating" value="3">
+                            <label for="star3" title="Good">★</label>
+
+                            <input type="radio" id="star2" name="rating" value="2">
+                            <label for="star2" title="Fair">★</label>
+
+                            <input type="radio" id="star1" name="rating" value="1">
+                            <label for="star1" title="Poor">★</label>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="review_text">Your Review</label>
+                        <textarea class="form-control"
+                                  id="review_text"
+                                  name="review"
+                                  rows="6"
+                                  placeholder="Tell us about your food, service and experience..."
+                                  required></textarea>
+                    </div>
+
+                    <button type="submit" class="gold-btn">
+                        Submit Review
+                    </button>
+                </form>
+
+            </div>
         </div>
 
-        <!-- Phone -->
-        <div class="mb-3">
-            <label for="phone" class="form-label">Contact Number</label>
-            <input
-                type="tel"
-                class="form-control"
-                id="phone"
-                name="phone"
-                placeholder="Enter your mobile number"
-                required>
-        </div>
-
-        <!-- Message -->
-        <div class="mb-3">
-            <label for="message" class="form-label">Message</label>
-            <textarea
-                class="form-control"
-                id="message"
-                name="message"
-                rows="5"
-                placeholder="Write your message here..."
-                required></textarea>
-        </div>
-
-        <button type="submit" class="btn btn-primary">
-            Send Message
-        </button>
-
-    </form>
-
+    </div>
 </div>
 
 {% endblock %}

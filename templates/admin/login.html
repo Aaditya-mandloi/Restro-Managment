@@ -1,0 +1,427 @@
+
+{% extends "base.html" %}
+
+{% block title %}Admin Login | Unity Restaurant{% endblock %}
+
+{% block extra_css %}
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        background: #0b0e14;
+        font-family: 'Segoe UI', Arial, sans-serif;
+        color: #ffffff;
+    }
+
+    .admin-login-wrapper {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 25px;
+        background:
+            radial-gradient(circle at 15% 20%, rgba(229,166,66,0.12), transparent 35%),
+            radial-gradient(circle at 85% 80%, rgba(124,58,237,0.10), transparent 35%),
+            #0b0e14;
+    }
+
+    .login-container {
+        width: 100%;
+        max-width: 1000px;
+        min-height: 570px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        overflow: hidden;
+        border: 1px solid #292f3b;
+        border-radius: 20px;
+        background: #11151e;
+        box-shadow: 0 25px 80px rgba(0,0,0,0.5);
+    }
+
+    /* LEFT PANEL */
+
+    .login-brand-panel {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 45px;
+        background:
+            linear-gradient(rgba(9,12,18,0.72), rgba(9,12,18,0.94)),
+            url("https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1200&q=85");
+        background-position: center;
+        background-size: cover;
+    }
+
+    .brand-logo {
+        font-size: 30px;
+        font-weight: 800;
+        letter-spacing: 2px;
+        color: #e5a642;
+    }
+
+    .brand-label {
+        font-size: 11px;
+        letter-spacing: 4px;
+        color: #d1d5db;
+        margin-top: 5px;
+    }
+
+    .brand-content h1 {
+        font-size: 38px;
+        line-height: 1.25;
+        font-weight: 800;
+        margin-bottom: 18px;
+    }
+
+    .brand-content h1 span {
+        color: #e5a642;
+    }
+
+    .brand-content p {
+        color: #c3c8d2;
+        font-size: 14px;
+        line-height: 1.8;
+        max-width: 360px;
+    }
+
+    .brand-footer {
+        color: #a1a8b5;
+        font-size: 12px;
+    }
+
+    /* RIGHT PANEL */
+
+    .login-form-panel {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 45px;
+    }
+
+    .login-form-content {
+        width: 100%;
+        max-width: 370px;
+    }
+
+    .admin-icon {
+        width: 58px;
+        height: 58px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #30283a;
+        border: 1px solid #51402c;
+        border-radius: 15px;
+        font-size: 26px;
+        margin-bottom: 25px;
+    }
+
+    .login-heading {
+        font-size: 29px;
+        font-weight: 750;
+        margin-bottom: 8px;
+    }
+
+    .login-description {
+        color: #8993a5;
+        font-size: 13px;
+        margin-bottom: 32px;
+    }
+
+    .form-label {
+        color: #d8dce4;
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 9px;
+    }
+
+    .form-control {
+        background: #1b2230;
+        border: 1px solid #343d4c;
+        color: #ffffff;
+        border-radius: 9px;
+        padding: 13px 14px;
+        font-size: 14px;
+    }
+
+    .form-control:focus {
+        background: #1b2230;
+        border-color: #e5a642;
+        color: #ffffff;
+        box-shadow: 0 0 0 3px rgba(229,166,66,0.12);
+    }
+
+    .form-control::placeholder {
+        color: #687386;
+    }
+
+    .password-wrapper {
+        position: relative;
+    }
+
+    .password-wrapper .form-control {
+        padding-right: 65px;
+    }
+
+    .toggle-password {
+        position: absolute;
+        right: 13px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        color: #e5a642;
+        font-size: 12px;
+        cursor: pointer;
+    }
+
+    .login-btn {
+        width: 100%;
+        padding: 13px;
+        border: none;
+        border-radius: 9px;
+        background: #e5a642;
+        color: #17120a;
+        font-weight: 750;
+        font-size: 14px;
+        margin-top: 10px;
+        transition: 0.2s;
+    }
+
+    .login-btn:hover {
+        background: #f3bd62;
+        transform: translateY(-2px);
+    }
+
+    .security-note {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 7px;
+        color: #7f8a9b;
+        font-size: 11px;
+        margin-top: 25px;
+    }
+
+    .back-home {
+        display: block;
+        text-align: center;
+        color: #e5a642;
+        text-decoration: none;
+        font-size: 12px;
+        margin-top: 20px;
+    }
+
+    .back-home:hover {
+        color: #f3bd62;
+    }
+
+    .alert {
+        font-size: 13px;
+    }
+
+    @media (max-width: 768px) {
+        .login-container {
+            grid-template-columns: 1fr;
+            max-width: 460px;
+            min-height: auto;
+        }
+
+        .login-brand-panel {
+            min-height: 210px;
+            padding: 25px;
+        }
+
+        .brand-content h1 {
+            font-size: 26px;
+            margin-top: 30px;
+        }
+
+        .brand-content p,
+        .brand-footer {
+            display: none;
+        }
+
+        .login-form-panel {
+            padding: 35px 25px;
+        }
+    }
+</style>
+{% endblock %}
+
+
+{% block body %}
+
+<div class="admin-login-wrapper">
+
+    <div class="login-container">
+
+        <!-- LEFT BRANDING PANEL -->
+        <div class="login-brand-panel">
+
+            <div>
+                <div class="brand-logo">UNITY.</div>
+                <div class="brand-label">RESTAURANT MANAGEMENT</div>
+            </div>
+
+            <div class="brand-content">
+
+                <h1>
+                    Manage your restaurant.
+                    <span>Better.</span>
+                </h1>
+
+                <p>
+                    Welcome to your central management platform.
+                    Manage orders, customers, food menus and
+                    restaurant operations from one place.
+                </p>
+
+            </div>
+
+            <div class="brand-footer">
+                © {% now "Y" %} Unity Restaurant. All rights reserved.
+            </div>
+
+        </div>
+
+
+        <!-- RIGHT LOGIN PANEL -->
+        <div class="login-form-panel">
+
+            <div class="login-form-content">
+
+                <div class="admin-icon">🔐</div>
+
+                <h2 class="login-heading">Admin Login</h2>
+
+                <p class="login-description">
+                    Sign in to access your restaurant dashboard.
+                </p>
+
+
+                <!-- DJANGO MESSAGES -->
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-danger">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+
+                <!-- LOGIN ERRORS -->
+                {% if form.errors %}
+                    <div class="alert alert-danger">
+                        Invalid username/email or password,
+                        or you don't have admin permission.
+                        Please try again.
+                    </div>
+                {% endif %}
+
+
+                <!-- LOGIN FORM -->
+                <form method="POST" action="{% url 'admin_login' %}">
+                    {% csrf_token %}
+
+                    {% if next %}
+                        <input type="hidden" name="next" value="{{ next }}">
+                    {% endif %}
+
+                    <div class="mb-4">
+
+                        <label for="id_username" class="form-label">
+                            Username or Email
+                        </label>
+
+                        <input
+                            type="text"
+                            name="username"
+                            id="id_username"
+                            class="form-control"
+                            placeholder="Enter your username or email"
+                            value="{{ form.username.value|default:'' }}"
+                            autocomplete="username"
+                            required
+                            autofocus
+                        >
+
+                    </div>
+
+
+                    <div class="mb-4">
+
+                        <label for="id_password" class="form-label">
+                            Password
+                        </label>
+
+                        <div class="password-wrapper">
+
+                            <input
+                                type="password"
+                                name="password"
+                                id="id_password"
+                                class="form-control"
+                                placeholder="Enter your password"
+                                autocomplete="current-password"
+                                required
+                            >
+
+                            <button
+                                type="button"
+                                class="toggle-password"
+                                id="togglePassword"
+                            >
+                                Show
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <button type="submit" class="login-btn">
+                        Sign In to Dashboard →
+                    </button>
+
+                </form>
+
+
+                <div class="security-note">
+                    🛡 Secure Administrator Access
+                </div>
+
+                <a href="{% url 'home' %}" class="back-home">
+                    ← Back to Restaurant Website
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+    const passwordInput = document.getElementById("id_password");
+    const toggleButton = document.getElementById("togglePassword");
+
+    toggleButton.addEventListener("click", function () {
+
+        if (passwordInput.type === "password") {
+            passwordInput.type = "text";
+            toggleButton.textContent = "Hide";
+        } else {
+            passwordInput.type = "password";
+            toggleButton.textContent = "Show";
+        }
+
+    });
+</script>
+
+{% endblock %}

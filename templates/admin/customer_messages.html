@@ -1,0 +1,259 @@
+
+{% extends "admin/admin_base.html" %}
+
+{% block title %}Customer Reviews | Unity Restaurant{% endblock %}
+
+{% block page_heading %}Customer Messages & Reviews{% endblock %}
+
+{% block page_description %}
+Read customer feedback and manage restaurant reviews.
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .review-stats {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 18px;
+        margin-bottom: 25px;
+    }
+
+    .review-stat {
+        background: #1e293b;
+        border: 1px solid #334155;
+        border-radius: 14px;
+        padding: 22px;
+    }
+
+    .review-stat p {
+        color: #94a3b8;
+        font-size: 13px;
+        margin-bottom: 10px;
+    }
+
+    .review-stat h3 {
+        color: #f8fafc;
+        font-size: 27px;
+        font-weight: 700;
+        margin: 0;
+    }
+
+    .review-panel {
+        background: #1e293b;
+        border: 1px solid #334155;
+        border-radius: 14px;
+        overflow: hidden;
+    }
+
+    .review-panel-header {
+        padding: 20px;
+        border-bottom: 1px solid #334155;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .review-panel-header h4 {
+        color: #f8fafc;
+        font-size: 17px;
+        margin: 0;
+    }
+
+    .review-count {
+        color: #94a3b8;
+        font-size: 13px;
+    }
+
+    .review-list {
+        padding: 20px;
+        display: grid;
+        gap: 16px;
+    }
+
+    .review-card {
+        background: #172033;
+        border: 1px solid #334155;
+        border-radius: 12px;
+        padding: 20px;
+    }
+
+    .review-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .review-customer {
+        color: #f8fafc;
+        font-weight: 600;
+        font-size: 15px;
+    }
+
+    .review-date {
+        color: #94a3b8;
+        font-size: 12px;
+        margin-top: 5px;
+    }
+
+    .review-stars {
+        color: #fbbf24;
+        letter-spacing: 2px;
+        font-size: 17px;
+        margin-top: 12px;
+    }
+
+    .review-text {
+        color: #cbd5e1;
+        font-size: 14px;
+        line-height: 1.7;
+        margin-top: 12px;
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+    }
+
+    .review-status {
+        display: inline-block;
+        padding: 6px 11px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 600;
+    }
+
+    .status-pending {
+        background: #78350f;
+        color: #fde68a;
+    }
+
+    .status-published {
+        background: #14532d;
+        color: #bbf7d0;
+    }
+
+    .status-rejected {
+        background: #7f1d1d;
+        color: #fecaca;
+    }
+
+    .empty-reviews {
+        text-align: center;
+        padding: 50px 20px;
+        color: #94a3b8;
+    }
+
+    @media (max-width: 900px) {
+        .review-stats {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (max-width: 550px) {
+        .review-stats {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+
+{% block admin_content %}
+
+<div class="review-stats">
+
+    <div class="review-stat">
+        <p>Total Reviews</p>
+        <h3>{{ total_reviews }}</h3>
+    </div>
+
+    <div class="review-stat">
+        <p>Average Rating</p>
+        <h3>{{ average_rating|floatformat:1 }} ★</h3>
+    </div>
+
+    <div class="review-stat">
+        <p>Pending Reviews</p>
+        <h3>{{ pending_reviews }}</h3>
+    </div>
+
+    <div class="review-stat">
+        <p>Published Reviews</p>
+        <h3>{{ published_reviews }}</h3>
+    </div>
+
+</div>
+
+
+<div class="review-panel">
+
+    <div class="review-panel-header">
+        <h4>Customer Feedback</h4>
+        <span class="review-count">
+            {{ total_reviews }} reviews received
+        </span>
+    </div>
+
+    <div class="review-list">
+
+        {% for review in reviews %}
+
+        <div class="review-card">
+
+            <div class="review-top">
+
+                <div>
+                    <div class="review-customer">
+                        {{ review.name }}
+                    </div>
+
+                    <div class="review-date">
+                        {{ review.created_at|date:"d M Y, h:i A" }}
+                    </div>
+                </div>
+
+                <span class="review-status
+                    {% if review.status == 'Pending' %}
+                        status-pending
+                    {% elif review.status == 'Published' %}
+                        status-published
+                    {% else %}
+                        status-rejected
+                    {% endif %}
+                ">
+                    {{ review.status }}
+                </span>
+
+            </div>
+
+            <div class="review-stars">
+                {% for star in "12345" %}
+                    {% if forloop.counter <= review.rating %}
+                        ★
+                    {% else %}
+                        ☆
+                    {% endif %}
+                {% endfor %}
+            </div>
+
+            <div class="review-text">
+                {{ review.review }}
+            </div>
+
+        </div>
+
+        {% empty %}
+
+        <div class="empty-reviews">
+            <h4>No customer reviews yet</h4>
+            <p>Customer feedback will appear here after customers submit reviews.</p>
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,402 @@
+
+{% extends "admin/admin_base.html" %}
+
+{% block title %}Customers | Unity Restaurant{% endblock %}
+
+{% block page_heading %}Customer Management{% endblock %}
+
+{% block page_description %}
+View, search and manage your restaurant customers.
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .customer-stats {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 18px;
+        margin-bottom: 25px;
+    }
+
+    .customer-stat {
+        background: #1e293b;
+        border: 1px solid #334155;
+        border-radius: 14px;
+        padding: 22px;
+    }
+
+    .customer-stat .stat-label {
+        color: #94a3b8;
+        font-size: 13px;
+        margin-bottom: 10px;
+    }
+
+    .customer-stat h3 {
+        color: #f8fafc;
+        font-size: 27px;
+        font-weight: 700;
+        margin: 0;
+    }
+
+    .customer-toolbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-bottom: 18px;
+    }
+
+    .customer-search {
+        display: flex;
+        gap: 8px;
+        flex: 1;
+        min-width: 240px;
+    }
+
+    .customer-search input,
+    .customer-toolbar select {
+        background: #1e293b;
+        color: #e2e8f0;
+        border: 1px solid #475569;
+        border-radius: 8px;
+        padding: 10px 12px;
+    }
+
+    .customer-search input {
+        width: 100%;
+    }
+
+    .customer-search input::placeholder {
+        color: #94a3b8;
+    }
+
+    .customer-search button,
+    .reset-btn {
+        background: #d4a64a;
+        color: #111827;
+        border: none;
+        border-radius: 8px;
+        padding: 10px 16px;
+        font-weight: 600;
+        text-decoration: none;
+        white-space: nowrap;
+    }
+
+    .reset-btn {
+        background: #334155;
+        color: #e2e8f0;
+    }
+
+    .customer-table-wrapper {
+        background: #1e293b;
+        border: 1px solid #334155;
+        border-radius: 14px;
+        overflow-x: auto;
+    }
+
+    .customer-table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 1050px;
+    }
+
+    .customer-table th {
+        color: #94a3b8;
+        background: #172033;
+        padding: 15px;
+        text-align: left;
+        font-size: 12px;
+        text-transform: uppercase;
+        white-space: nowrap;
+    }
+
+    .customer-table td {
+        color: #e2e8f0;
+        padding: 15px;
+        border-top: 1px solid #334155;
+        font-size: 13px;
+    }
+
+    .customer-table tbody tr:hover {
+        background: #263449;
+    }
+
+    .customer-name {
+        color: #f8fafc;
+        font-weight: 600;
+    }
+
+    .customer-email {
+        color: #94a3b8;
+        font-size: 12px;
+        margin-top: 4px;
+    }
+
+    .customer-badge {
+        display: inline-block;
+        padding: 5px 9px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 600;
+        background: #334155;
+        color: #cbd5e1;
+    }
+
+    .pagination {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 12px;
+        padding: 18px;
+        color: #94a3b8;
+    }
+
+    .pagination-links {
+        display: flex;
+        gap: 6px;
+    }
+
+    .pagination-links a,
+    .pagination-links span {
+        padding: 7px 11px;
+        border-radius: 7px;
+        background: #334155;
+        color: #e2e8f0;
+        text-decoration: none;
+        font-size: 13px;
+    }
+
+    .pagination-links .active {
+        background: #d4a64a;
+        color: #111827;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 45px 20px !important;
+        color: #94a3b8 !important;
+    }
+
+    @media (max-width: 1000px) {
+        .customer-stats {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (max-width: 550px) {
+        .customer-stats {
+            grid-template-columns: 1fr;
+        }
+
+        .customer-toolbar {
+            align-items: stretch;
+        }
+
+        .customer-search {
+            min-width: 100%;
+        }
+    }
+</style>
+{% endblock %}
+
+
+{% block admin_content %}
+
+<div class="customer-stats">
+
+    <div class="customer-stat">
+        <div class="stat-label">Total Customers</div>
+        <h3>{{ total_customers }}</h3>
+    </div>
+
+    <div class="customer-stat">
+        <div class="stat-label">New This Month</div>
+        <h3>{{ new_customers }}</h3>
+    </div>
+
+    <div class="customer-stat">
+        <div class="stat-label">Repeat Customers</div>
+        <h3>{{ repeat_customers }}</h3>
+    </div>
+
+    <div class="customer-stat">
+        <div class="stat-label">Average Spending</div>
+        <h3>₹{{ average_spending|floatformat:2 }}</h3>
+    </div>
+
+</div>
+
+
+<div class="customer-toolbar">
+
+    <form method="GET" class="customer-search">
+
+        <input
+            type="text"
+            name="q"
+            placeholder="Search name, email or phone..."
+            value="{{ search_query }}"
+        >
+
+        {% if customer_type %}
+            <input type="hidden" name="type" value="{{ customer_type }}">
+        {% endif %}
+
+        {% if sort_by %}
+            <input type="hidden" name="sort" value="{{ sort_by }}">
+        {% endif %}
+
+        <button type="submit">Search</button>
+
+    </form>
+
+    <form method="GET" style="display:flex; gap:8px; flex-wrap:wrap;">
+
+        {% if search_query %}
+            <input type="hidden" name="q" value="{{ search_query }}">
+        {% endif %}
+
+        <select name="type" onchange="this.form.submit()">
+            <option value="">All Customers</option>
+            <option value="new" {% if customer_type == "new" %}selected{% endif %}>
+                New Customers
+            </option>
+            <option value="repeat" {% if customer_type == "repeat" %}selected{% endif %}>
+                Repeat Customers
+            </option>
+        </select>
+
+        <select name="sort" onchange="this.form.submit()">
+            <option value="newest" {% if sort_by == "newest" %}selected{% endif %}>
+                Newest First
+            </option>
+            <option value="oldest" {% if sort_by == "oldest" %}selected{% endif %}>
+                Oldest First
+            </option>
+            <option value="spending" {% if sort_by == "spending" %}selected{% endif %}>
+                Highest Spending
+            </option>
+            <option value="orders" {% if sort_by == "orders" %}selected{% endif %}>
+                Most Orders
+            </option>
+            <option value="recent_order" {% if sort_by == "recent_order" %}selected{% endif %}>
+                Recent Orders
+            </option>
+        </select>
+
+    </form>
+
+    <a href="{% url 'admin_customers' %}" class="reset-btn">
+        Reset
+    </a>
+
+</div>
+
+
+<div class="customer-table-wrapper">
+
+    <table class="customer-table">
+
+        <thead>
+            <tr>
+                <th>Customer</th>
+                <th>Phone</th>
+                <th>Joined Date</th>
+                <th>Total Orders</th>
+                <th>Total Spent</th>
+                <th>Last Order</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            {% for customer in customers %}
+
+            <tr>
+
+                <td>
+                    <div class="customer-name">
+                        {{ customer.user.get_full_name|default:customer.user.username }}
+                    </div>
+                    <div class="customer-email">
+                        {{ customer.user.email }}
+                    </div>
+                </td>
+
+                <td>{{ customer.phone }}</td>
+
+                <td>{{ customer.user.date_joined|date:"d M Y" }}</td>
+
+                <td>
+                    <span class="customer-badge">
+                        {{ customer.total_orders }}
+                    </span>
+                </td>
+
+                <td>
+                    ₹{{ customer.total_spent|default:0|floatformat:2 }}
+                </td>
+
+                <td>
+                    {% if customer.last_order %}
+                        {{ customer.last_order|date:"d M Y, h:i A" }}
+                    {% else %}
+                        <span class="customer-badge">No orders</span>
+                    {% endif %}
+                </td>
+
+            </tr>
+
+            {% empty %}
+
+            <tr>
+                <td colspan="6" class="empty-state">
+                    No customers found.
+                </td>
+            </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+
+    {% if customers.has_other_pages %}
+
+    <div class="pagination">
+
+        <div>
+            Showing {{ customers.start_index }}–{{ customers.end_index }}
+            of {{ customers.paginator.count }} customers
+        </div>
+
+        <div class="pagination-links">
+
+            {% if customers.has_previous %}
+                <a href="?q={{ search_query|urlencode }}&type={{ customer_type }}&sort={{ sort_by }}&page={{ customers.previous_page_number }}">
+                    Previous
+                </a>
+            {% endif %}
+
+            <span class="active">
+                {{ customers.number }} / {{ customers.paginator.num_pages }}
+            </span>
+
+            {% if customers.has_next %}
+                <a href="?q={{ search_query|urlencode }}&type={{ customer_type }}&sort={{ sort_by }}&page={{ customers.next_page_number }}">
+                    Next
+                </a>
+            {% endif %}
+
+        </div>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

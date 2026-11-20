@@ -1,0 +1,76 @@
+
+{% extends "base.html" %}
+{% block title %}{{ page_title }} | Unity Restaurant{% endblock %}
+
+{% block extra_css %}
+<style>
+    body { background:#0f172a; color:#e2e8f0; }
+    .form-container { max-width:850px; margin:40px auto; padding:20px; }
+    .form-panel { background:#1e293b; border:1px solid #334155; border-radius:14px; padding:28px; }
+    .form-panel h2 { color:#f8fafc; font-weight:700; }
+    .form-label { color:#cbd5e1; }
+    .form-control, .form-select {
+        background:#0f172a; color:#f8fafc; border:1px solid #475569;
+    }
+    .form-control:focus, .form-select:focus {
+        background:#0f172a; color:white; border-color:#38bdf8; box-shadow:none;
+    }
+    .form-control::placeholder { color:#94a3b8; }
+    .help-text { color:#94a3b8; font-size:13px; }
+    .btn-save { background:#0ea5e9; color:white; border:0; padding:11px 20px; border-radius:8px; }
+    .btn-save:hover { background:#0284c7; }
+    .back-link { color:#38bdf8; text-decoration:none; }
+    .errorlist { color:#fca5a5; padding-left:20px; }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="form-container">
+    <div class="form-panel">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
+            <h2>{{ page_title }}</h2>
+            <a href="{% url 'admin_menu' %}" class="back-link">← Back to Menu</a>
+        </div>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+
+            {% for field in form %}
+                <div class="mb-3">
+                    <label class="form-label" for="{{ field.id_for_label }}">
+                        {{ field.label }}
+                    </label>
+                    {{ field }}
+                    {% if field.help_text %}
+                        <div class="help-text">{{ field.help_text }}</div>
+                    {% endif %}
+                    {% for error in field.errors %}
+                        <div class="text-danger small">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+
+            <div class="d-flex gap-2 flex-wrap mt-4">
+                <button type="submit" class="btn-save">
+                    Save Menu Item
+                </button>
+                <a href="{% url 'admin_menu' %}" class="btn btn-outline-light">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
