@@ -27,3 +27,8 @@ env/
 # Operating System
 .DS_Store
 Thumbs.db
+*.sqlite3
+*.sqlite3-*
+.env
+.env.*
+data/
